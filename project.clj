@@ -14,7 +14,7 @@
 
 
 ;; KineticFire Labs: https://labs.kineticfire.com
-;;	   Project site: https://github.com/kineticfire-labs/clojure-collections
+;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
 (defproject com.kineticfire/collections "0.1.0-SNAPSHOT"
