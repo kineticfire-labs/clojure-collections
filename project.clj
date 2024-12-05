@@ -22,7 +22,14 @@
   :url "https://github.com/kineticfire-labs/clojure-collections"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0"}
-  :dependencies [[org.clojure/clojure "1.10.0"]]
+  :dependencies [[org.clojure/clojure "1.12.0"]
+                 [org.clojure/clojurescript "1.11.132"]]
+  :plugins [[lein-cljsbuild "1.1.8"]]
+  :cljsbuild {:builds [{:id "main"
+                        :source-paths ["src"]
+                        :compiler {:output-to "target/collections.js"
+                                   :optimizations :whitespace
+                                   :pretty-print true}}]}
   :main ^:skip-aot collections.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
