@@ -17,9 +17,9 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
-(ns collections.core-test
-  (:require [clojure.test :refer :all]
-            [collections.core :as collections]))
+(ns kineticfire.collections.core-test
+  (:require [clojure.test                 :refer :all]
+            [kineticfire.collections.core :as collections]))
 
 
 
@@ -248,16 +248,24 @@
 (deftest assoc-in-test
   ;;
   ;; m, ks, v
-  (testing "m, ks, v: add to existing structure"
+  (testing "m, ks as vector, v: add to existing structure"
     (perform-assoc-in-m-ks-test {:a {:b 1}} [:a :c] 2 {:a {:b 1 :c 2}}))
-  (testing "m, ks, v: need to create structure"
+  (testing "m, ks as vector, v: need to create structure"
     (perform-assoc-in-m-ks-test {:a {:b 1}} [:a :c :d] 2 {:a {:b 1 :c {:d 2}}}))
+  (testing "m, ks as list, v: add to existing structure"
+    (perform-assoc-in-m-ks-test {:a {:b 1}} '(:a :c) 2 {:a {:b 1 :c 2}}))
+  (testing "m, ks as list, v: need to create structure"
+    (perform-assoc-in-m-ks-test {:a {:b 1}} '(:a :c :d) 2 {:a {:b 1 :c {:d 2}}}))
   ;;
   ;; m, ks-v-coll
-  (testing "m, ks-v-coll: one item, add to existing structure"
+  (testing "m, ks-v-coll as vectors: one item, add to existing structure"
     (perform-assoc-in-m-ks-v-coll-test {:a {:b 1}} [ [[:a :c] 2] ] {:a {:b 1 :c 2}}))
-  (testing "m, ks-v-coll: two items, add to existing structure and create new structure"
-    (perform-assoc-in-m-ks-v-coll-test {:a {:b 1}} [ [[:a :c] 2] [[:a :d :e] 3] ] {:a {:b 1 :c 2 :d {:e 3}}})))
+  (testing "m, ks-v-coll as vectors: two items, add to existing structure and create new structure"
+    (perform-assoc-in-m-ks-v-coll-test {:a {:b 1}} [ [[:a :c] 2] [[:a :d :e] 3] ] {:a {:b 1 :c 2 :d {:e 3}}}))
+  (testing "m, ks-v-coll as lists: one item, add to existing structure"
+    (perform-assoc-in-m-ks-v-coll-test {:a {:b 1}} (list (list (list :a :c) 2) ) {:a {:b 1 :c 2}}))
+  (testing "m, ks-v-coll as lists: two items, add to existing structure and create new structure"
+    (perform-assoc-in-m-ks-v-coll-test {:a {:b 1}} (list (list (list :a :c) 2) (list (list :a :d :e) 3) ) {:a {:b 1 :c 2 :d {:e 3}}})))
 
 
 (defn perform-dissoc-in-test

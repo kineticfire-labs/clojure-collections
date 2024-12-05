@@ -17,7 +17,7 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
-(ns collections.core
+(ns kineticfire.collections.core
   (:gen-class))
 
 
@@ -65,7 +65,7 @@
   [col]
   (not (empty? (find-duplicates col))))
 
-;; todo: confirm tests
+
 (defn assoc-in
   "Associates a value in a nested associative structure as with 'clojure.core/assoc-in', but also accepts a sequence of
   key sequence / value pairs to associate multiple values in one call.  If any levels do not exist, hash-maps will be
@@ -88,7 +88,7 @@
   ([m ks v]
    (clojure.core/assoc-in m ks v)))
 
-;; todo: confirm tests
+
 (defn dissoc-in
   "Disassociates a value in a nested associative structure `m`, where `ks` is either a sequence of keys or a sequence
   of key sequences.
