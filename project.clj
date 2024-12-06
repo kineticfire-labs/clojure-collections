@@ -28,8 +28,8 @@
   :cljsbuild {:builds [{:id "main"
                         :source-paths ["src"]
                         :compiler {:output-to "target/collections.js"
-                                   :optimizations :whitespace
-                                   :pretty-print true}}]}
+                                   :optimizations :advanced
+                                   :pretty-print false}}]}
   :main ^:skip-aot collections.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
