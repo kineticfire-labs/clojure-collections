@@ -17,7 +17,7 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
-(ns kineticfire.collections.core
+(ns kineticfire.collections.collection
   (:gen-class))
 
 

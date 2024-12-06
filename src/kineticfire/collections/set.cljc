@@ -17,7 +17,13 @@
 ;;	   Project site:  https://github.com/kineticfire-labs/clojure-collections
 
 
-(ns collections.set
+(ns kineticfire.collections.set
+  (:require [clojure.set :as set])
   (:gen-class))
 
-(def a 1)
+
+
+(defn symmetric-difference [set1 set2]
+  "Returns a set that is the symmetric difference between the first set `set1` and second set `set2`.  That is, the
+  returned set contains all the values that are present in one set but not the other."
+  (set/union (set/difference set1 set2) (set/difference set2 set1)))

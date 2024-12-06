@@ -17,15 +17,15 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
-(ns kineticfire.collections.core-test
-  (:require [clojure.test                 :refer :all]
-            [kineticfire.collections.core :as collections]))
+(ns kineticfire.collections.collection-test
+  (:require [clojure.test                       :refer :all]
+            [kineticfire.collections.collection :as kf-collection]))
 
 
 
 (defn perform-not-empty?-test
   [col fn-expected]
-  (let [v (collections/not-empty? col)]
+  (let [v (kf-collection/not-empty? col)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -65,7 +65,7 @@
 
 (defn perform-contains-value-test
   [col search fn-expected]
-  (let [v (collections/contains-value? col search)]
+  (let [v (kf-collection/contains-value? col search)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -105,7 +105,7 @@
 
 (defn perform-find-duplicates-test
   [col expected]
-  (let [v (collections/find-duplicates col)]
+  (let [v (kf-collection/find-duplicates col)]
     (is (vector? v))
     (is (= (sort v) (sort expected)))))
 
@@ -169,7 +169,7 @@
 
 (defn perform-duplicates?-test
   [col fn-expected]
-  (let [v (collections/duplicates? col)]
+  (let [v (kf-collection/duplicates? col)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -233,14 +233,14 @@
 
 (defn perform-assoc-in-m-ks-test
   [m ks v expected]
-  (let [result (collections/assoc-in m ks v)]
+  (let [result (kf-collection/assoc-in m ks v)]
     (is (map? result))
     (is (= result expected))))
 
 
 (defn perform-assoc-in-m-ks-v-coll-test
   [m ks-v-coll expected]
-  (let [result (collections/assoc-in m ks-v-coll)]
+  (let [result (kf-collection/assoc-in m ks-v-coll)]
     (is (map? result))
     (is (= result expected))))
 
@@ -270,7 +270,7 @@
 
 (defn perform-dissoc-in-test
   [m ks expected]
-  (let [v (collections/dissoc-in m ks)]
+  (let [v (kf-collection/dissoc-in m ks)]
     (is (map? v))
     (is (= v expected))))
 
