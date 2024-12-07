@@ -17,7 +17,7 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
-(defproject com.kineticfire/collections "0.1.0-SNAPSHOT"
+(defproject com.kineticfire/collections "1.0.0"
   :description "Clojure/ClojureScript utilities for collections"
   :url "https://github.com/kineticfire-labs/clojure-collections"
   :license {:name "Apache License, Version 2.0"
@@ -30,6 +30,8 @@
                         :compiler {:output-to "target/collections.js"
                                    :optimizations :advanced
                                    :pretty-print false}}]}
+  :repositories [["releases" {:url "https://repo.clojars.org"
+                              :creds :gpg}]]
   :main ^:skip-aot collections.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
