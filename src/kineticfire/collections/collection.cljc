@@ -23,7 +23,7 @@
 
 (defn not-empty?
   "Returns boolean 'true' if the collection `col` is not empty and 'false' otherwise.  Suitable for vectors, lists,
-  maps, and strings.  Uses an implementation with the recommended idiom (seq col) but is more readable, regardless of
+  maps, and strings.  Uses an implementation with the recommended idiom 'seq col' but is more readable, regardless of
   experience."
   [col]
   (not (boolean (seq col))))
@@ -78,15 +78,15 @@
   Calling (assoc-in m ks v) is equivalent to calling (clojure.core/assoc-in m ks v).  Calling (assoc-in m ks-v-seq) is
   equivalent to calling clojure.core/assoc-in with a reduce function to accumulate the results of associating multiple
   key sequence / value pairs."
+  ([m ks v]
+   (clojure.core/assoc-in m ks v))
   ([m ks-v-seq]
    (reduce (fn [acc single-ks-v]
              (let [ks (first single-ks-v)
                    v (last single-ks-v)]
                (clojure.core/assoc-in acc ks v)))
            m
-           ks-v-seq))
-  ([m ks v]
-   (clojure.core/assoc-in m ks v)))
+           ks-v-seq)))
 
 
 (defn dissoc-in
