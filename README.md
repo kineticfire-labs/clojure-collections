@@ -7,9 +7,23 @@
 Clojure/ClojureScript utilities for collections
 
 # Contents
-1. [Installation](#installation)
-2. [Usage](#usage)
-3. [License](#license)
+1. [Motivation](#motivation)
+2. [Installation](#installation)
+3. [Usage](#usage)
+4. [License](#license)
+
+
+# Motivation
+
+This library provides functions for operating on collections.  The library focuses at the intersection of (1) 
+simplifying common, multistep operations on collections and (2) increasing code maintainability (e.g., the ease with 
+which software can be understood and modified) for those operations.
+
+A trite example: `(not (seq x))` is the [recommended idiom for testing that a sequence is empty](https://clojuredocs.org/clojure.core/empty_q).
+However, `(not-empty? x)` seems much more readable.  While senior Clojurians readily recognize `(not (seq x))` as asking 
+if `x` is not empty, junior developers may not; in practice, most development teams do not consist of all senior-level 
+Clojure experts.  Even for senior Clojurians, `(not-empty? x)` reduces the cognitive load after long hours of pouring 
+through many lines of code. 
 
 
 # Installation
@@ -72,7 +86,7 @@ implementation("com.kineticfire:collections:1.0.0")
 ```
 
 Returns boolean 'true' if the collection `col` is not empty and 'false' otherwise.  Suitable for vectors, lists,
-maps, and strings.  Uses an implementation with the recommended idiom 'seq col' but is more readable, regardless of
+maps, and strings.  Uses an implementation with the recommended idiom `(seq col)` but is more readable, regardless of
 experience.
 
 ```clojure
