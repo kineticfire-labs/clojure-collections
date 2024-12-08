@@ -44,9 +44,9 @@ implementation("com.kineticfire:collections:1.0.0")
 
 # Usage
 
-1. [collections.collection](#collections.collection)
-   1. [not-empty?](#not-empty?)
-1. [collections.set](#collections.set)
+1. [collections.collection](#collectionscollection)
+   1. [not-empty?](#not-empty)
+1. [collections.set](#collectionsset)
    1. [symmetric-difference](#symmetric-difference)
 
 
