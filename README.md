@@ -19,7 +19,7 @@ This library provides functions for operating on collections.  The library focus
 simplifying common, multistep operations on collections and (2) increasing code maintainability (e.g., the ease with 
 which software can be understood and modified) for those operations.
 
-A trite example: `(not (seq x))` is the [recommended idiom for testing that a sequence is empty](https://clojuredocs.org/clojure.core/empty_q).
+A trite example: `(not (seq x))` is the [recommended idiom for testing that a sequence is not empty](https://clojuredocs.org/clojure.core/empty_q).
 However, `(not-empty? x)` seems much more readable.  While senior Clojurians readily recognize `(not (seq x))` as asking 
 if `x` is not empty, junior developers may not; in practice, most development teams do not consist of all senior-level 
 Clojure experts.  Even for senior Clojurians, `(not-empty? x)` reduces the cognitive load when quickly scanning through 
