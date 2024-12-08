@@ -6,7 +6,99 @@
 
 Clojure/ClojureScript utilities for collections
 
+# Contents
+1. [Installation](#installation)
+2. [Usage](#usage)
+3. [License](#license)
 
+
+# Installation
+
+## Leiningen/Boot
+
+```
+[com.kineticfire/collections "1.0.0"]
+```
+
+## Clojure CLI/deps.edn
+
+```
+com.kineticfire/collections {:mvn/version "1.0.0"}
+```
+
+## Gradle
+
+```
+implementation("com.kineticfire:collections:1.0.0")
+```
+
+## Maven
+
+```
+<dependency>
+  <groupId>com.kineticfire</groupId>
+  <artifactId>collections</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+# Usage
+
+1. [collections.collection](#collections.collection)
+   1. [not-empty?](#not-empty?)
+1. [collections.set](#collections.set)
+   1. [symmetric-difference](#symmetric-difference)
+
+
+## collections.collection
+
+### not-empty?
+```
+(not-empty? [1])
+;;=> true
+
+(not-empty? [])
+;;=> false
+
+(not-empty? '(1))
+;;=> true
+
+(not-empty? '())
+;;=> false
+
+(not-empty? {:a 1})
+;;=> true
+
+(not-empty? {})
+;;=> false
+
+(not-empty? "hello")
+;;=> true
+
+(not-empty? "")
+;;=> false
+```
+
+## collections.set
+
+1. [symmetric-difference](#symmetric-difference)
+
+### symmetric-difference
+
+```
+(symmetric-difference #{} #{}
+;;=> #{}
+
+(symmetric-difference #{1} #{}
+;;=> #{1}
+
+(symmetric-difference #{} #{1}
+;;=> #{1}
+
+(symmetric-difference #{1 2 3} #{ 1 2 4}
+;;=> #{3 4}
+
+```
 
 
 # License
