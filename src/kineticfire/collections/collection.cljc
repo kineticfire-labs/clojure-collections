@@ -23,7 +23,7 @@
 
 (defn not-empty?
   "Returns boolean 'true' if the collection `col` is not empty and 'false' otherwise.  Suitable for vectors, lists,
-  maps, and strings.  Uses an implementation with the recommended idiom 'seq col' but is more readable, regardless of
+  maps, and strings.  Uses an implementation with the recommended idiom '(seq col)' but is more readable, regardless of
   experience."
   [col]
   (not (boolean (seq col))))
