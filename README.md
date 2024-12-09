@@ -19,8 +19,8 @@ This library provides functions for operating on collections.  The library focus
 simplifying common, multistep operations on collections and (2) increasing code maintainability (e.g., the ease with 
 which software can be understood and modified) for those operations.
 
-A trite example: `(not (seq x))` is the [recommended idiom for testing that a sequence is not empty](https://clojuredocs.org/clojure.core/empty_q).
-However, `(not-empty? x)` seems much more readable.  While senior Clojurians readily recognize `(not (seq x))` as asking 
+A trite example: `(seq x)` is the [recommended idiom for testing that a sequence is not empty](https://clojuredocs.org/clojure.core/empty_q).
+However, `(not-empty? x)` seems much more readable.  While senior Clojurians readily recognize `(seq x)` as asking 
 if `x` is not empty, junior developers may not; in practice, most development teams do not consist of all senior-level 
 Clojure experts.  Even for senior Clojurians, `(not-empty? x)` reduces the cognitive load when quickly scanning through 
 code or after long hours of pouring through many lines of code. 
@@ -31,19 +31,19 @@ code or after long hours of pouring through many lines of code.
 ## Leiningen/Boot
 
 ```
-[com.kineticfire/collections "1.0.0"]
+[com.kineticfire/collections "2.0.0"]
 ```
 
 ## Clojure CLI/deps.edn
 
 ```
-com.kineticfire/collections {:mvn/version "1.0.0"}
+com.kineticfire/collections {:mvn/version "2.0.0"}
 ```
 
 ## Gradle
 
 ```
-implementation("com.kineticfire:collections:1.0.0")
+implementation("com.kineticfire:collections:2.0.0")
 ```
 
 ## Maven
@@ -52,7 +52,7 @@ implementation("com.kineticfire:collections:1.0.0")
 <dependency>
   <groupId>com.kineticfire</groupId>
   <artifactId>collections</artifactId>
-  <version>1.0.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
@@ -61,8 +61,10 @@ implementation("com.kineticfire:collections:1.0.0")
 1. [collections.collection](#collectionscollection)
    1. [not-empty?](#not-empty)
    2. [contains-value?](#contains-value)
-   3. [find-duplicates](#find-duplicates)
-   4. [duplicates?](#duplicates)
+   3. [not-contains-value?](#not-contains-value)
+   3. [duplicates](#duplicates)
+   4. [duplicates?](#duplicates-1)
+   5. [not-duplicates?](#not-duplicates)
    5. [assoc-in](#assoc-in)
    6. [dissoc-in](#dissoc-in)
 2. [collections.set](#collectionsset)
@@ -73,8 +75,10 @@ implementation("com.kineticfire:collections:1.0.0")
 
 1. [not-empty?](#not-empty)
 2. [contains-value?](#contains-value)
-3. [find-duplicates](#find-duplicates)
-4. [duplicates?](#duplicates)
+3. [not-contains-value?](#not-contains-value)
+3. [duplicates](#duplicates)
+4. [duplicates?](#duplicates-1)
+5. [not-duplicates?](#not-duplicates)
 5. [assoc-in](#assoc-in)
 6. [dissoc-in](#dissoc-in)
 
@@ -82,11 +86,11 @@ implementation("com.kineticfire:collections:1.0.0")
 ### not-empty?
 
 ```clojure
-(not-empty? col)
+(not-empty? coll)
 ```
 
-Returns boolean 'true' if the collection `col` is not empty and 'false' otherwise.  Suitable for vectors, lists,
-maps, and strings.  Uses an implementation with the recommended idiom `(seq col)` but is more readable, regardless of
+Returns boolean 'true' if the collection `coll` is not empty and 'false' otherwise.  Suitable for vectors, lists,
+maps, and strings.  Uses an implementation with the recommended idiom `(seq coll)` but is more readable, regardless of
 experience.
 
 ```clojure
@@ -112,11 +116,14 @@ experience.
 ### contains-value?
 
 ```clojure
-(contains-value? col val) 
+(contains-value? coll val) 
 ```
 
-Returns boolean 'true' if the value `val` is contained in the collection `col` and 'false' otherwise.  For a map,
+Returns boolean 'true' if the value `val` is contained in the collection `coll` and 'false' otherwise.  For a map,
 searches values at the current level only.
+
+Where `(clojure.core/contains? coll key)` checks if the key is in the collection, this function tests if a *value* is
+contained in the collection.
 
 ```clojure
 (contains-value? [1 2 3] 2)
@@ -136,41 +143,76 @@ searches values at the current level only.
 ;;=> false
 ```
 
-### find-duplicates
+### not-contains-value?
 
 ```clojure
-(find-duplicates col)
+(not-contains-value? coll val) 
 ```
 
-Returns a vector of duplicates found in the collection 'col'.  If no duplicates, then returns an empty vector.  For
-a map, searches values at the current level only.
+Returns boolean 'false' if the value `val` is not contained in the collection `coll` and 'false' otherwise.  For a
+map, searches values at the current level only.
+
+Where `(not (clojure.core/contains? coll key))` checks if the *key* is not in the collection, this function tess if a
+*value* is not contained in the collection.
 
 ```clojure
-(find-duplicates [1 2 2 3 3])
+(not-contains-value? [1 2 3] 2)
+;;=> false
+
+(not-contains-value? [1 2 3] 4)
+;;=> true
+
+(not-contains-value? {:a 1} 1)
+;;=> false
+
+(not-contains-value? {:a 1} 2)
+;;=> true
+
+;; for a map, searches current level of keys only
+(not-contains-value? {:a {:b 2}} 2)
+;;=> true
+```
+
+### duplicates
+
+```clojure
+(duplicates coll)
+```
+
+Returns a vector of duplicates found in the collection `coll`.  If no duplicates, then returns an empty vector.  For
+a map, searches values at the current level only.
+
+Where `(clojure.core/distinct coll)` returns a lazy sequence of elements with duplicates removed, this function returns a
+vector of the duplicates.
+
+```clojure
+(duplicates [1 2 2 3 3])
 ;;=> [2 3]
 
-(find-duplicates [1 2 3])
+(duplicates [1 2 3])
 ;;=> []
 
-(find-duplicates {:a 1 :b 2 :c 2 :d 3 :e 3})
+(duplicates {:a 1 :b 2 :c 2 :d 3 :e 3})
 ;;=> [2 3]
 
-(find-duplicates {:a 1 :b 2 :c 3})
+(duplicates {:a 1 :b 2 :c 3})
 ;;=> []
 
 ;; for a map, searches current level of keys only
-(find-duplicates {:z {:a 1 :b 2 :c 2 :d 3 :e 3}})
+(duplicates {:z {:a 1 :b 2 :c 2 :d 3 :e 3}})
 ;;=> []
 ```
 
 ### duplicates?
 
 ```clojure
-(duplicates? col)
+(duplicates? coll)
 ```
 
-Returns boolean 'true' if the collection `col` contains at least one duplicate and 'false' otherwise.  For a map,
-searches values at the current level only.  Similar to 'clojure.core/distinct?', but its values are taken separately (e.g., not in a collection) while this
+Returns boolean 'true' if the collection `coll` contains at least one duplicate and 'false' otherwise.  For a map,
+searches values at the current level only.
+
+Similar to `(clojure.core/distinct? coll)`, but its values are taken separately (e.g., not in a collection) while this
 function operates on collections.
 
 ```clojure
@@ -191,15 +233,54 @@ function operates on collections.
 ;;=> false
 ```
 
+### not-duplicates?
+
+```clojure
+(not-duplicates? coll)
+```
+
+Returns boolean 'true' if the collection `coll` does not contain a duplicate and 'false' otherwise.  For a map,
+searches values at the current level only.
+
+Similar to `(not (clojure.core/distinct? coll))`, but its values are taken separately (e.g., not in a collection)
+while this function operates on collections.
+
+```clojure
+(not-duplicates? [1 2 2 3 3])
+;;=> false
+
+(not-duplicates? [1 2 3])
+;;=> true
+
+(not-duplicates? {:a 1 :b 2 :c 2 :d 3 :e 3})
+;;=> false
+
+(not-duplicates? {:a 1 :b 2 :c 3})
+;;=> true
+
+;; for a map, searches current level of keys only
+(not-duplicates? {:z {:a 1 :b 2 :c 2 :d 3 :e 3}})
+;;=> true
+```
+
+
 ### assoc-in
 
 ```clojure
 (assoc-in m ks v) (assoc-in m ks-v-seq)
 ```
 
-Associates a value in a nested associative structure as with 'clojure.core/assoc-in', but also accepts a sequence of
-key sequence / value pairs to associate multiple values in one call.  If any levels do not exist, hash-maps will be
-created.
+Associates a value in a nested associative structure as with `(clojure.core/assoc-in m ks v)`, but also accepts a 
+sequence of key sequence / value pairs to associate multiple values in one call.  If any levels do not exist, hash-maps 
+will be created.
+
+For signature 'm ks v': associates the value `v` in the nested associative structure `m` at key sequence `ks` exactly
+as `(clojure.core/assoc-in m ks v)`.  For signature 'm ks-v-seq': behaves as above with `ks-v-seq` as a sequence with
+one or more sequences of a key sequence and one value to associate multiple values in one call.
+
+Calling `(assoc-in m ks v)` is equivalent to calling `(clojure.core/assoc-in m ks v)`.  Calling `(assoc-in m ks-v-seq)`
+is equivalent calling `(clojure.core/assoc-in m ks v)` with a reduce function to accumulate the results of  associating 
+multiple key sequence / value pairs.
 
 ```clojure
 (def data {:a {:b 1}})
@@ -221,6 +302,11 @@ created.
 
 Disassociates a value in a nested associative structure `m`, where `ks` is either a sequence of keys or a sequence
 of key sequences.
+
+Calling this function where `ks` is a sequence of keys is equivalent to removing the property at ks with a combination
+of `clojure.core/update-in` and `clojure.core/dissoc`.  Calling this function with a sequence of a sequence of keys is
+equivalent to using a reduce function to accumulate the results from removing multiple sequences of keys using
+'update-in' and `dissoc`.
 
 ```clojure
 (def data {:a {:b 1 :c 2}})
@@ -256,7 +342,7 @@ returned set contains all the values that are present in one set but not the oth
 (symmetric-difference #{} #{1})
 ;;=> #{1}
 
-(symmetric-difference #{1 2 3} #{ 1 2 4})
+(symmetric-difference #{1 2 3} #{1 2 4})
 ;;=> #{3 4}
 ```
 
