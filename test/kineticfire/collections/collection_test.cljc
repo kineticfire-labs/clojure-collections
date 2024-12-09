@@ -24,8 +24,8 @@
 
 
 (defn perform-not-empty?-test
-  [col fn-expected]
-  (let [v (kf-collection/not-empty? col)]
+  [coll fn-expected]
+  (let [v (kf-collection/not-empty? coll)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -34,38 +34,38 @@
   ;;
   ;; vector
   (testing "vector, empty"
-    (perform-not-empty?-test [] true?))
+    (perform-not-empty?-test [] false?))
   (testing "vector, not empty"
-    (perform-not-empty?-test [1] false?))
+    (perform-not-empty?-test [1] true?))
   ;;
   ;; list
   (testing "list, empty"
-    (perform-not-empty?-test '() true?))
+    (perform-not-empty?-test '() false?))
   (testing "list, not empty"
-    (perform-not-empty?-test '(1) false?))
+    (perform-not-empty?-test '(1) true?))
   ;;
   ;; set
   (testing "set, empty"
-    (perform-not-empty?-test #{} true?))
+    (perform-not-empty?-test #{} false?))
   (testing "set, not empty"
-    (perform-not-empty?-test #{1} false?))
+    (perform-not-empty?-test #{1} true?))
   ;;
   ;; map
   (testing "map, empty"
-    (perform-not-empty?-test {} true?))
+    (perform-not-empty?-test {} false?))
   (testing "map, not empty"
-    (perform-not-empty?-test {:a 1} false?))
+    (perform-not-empty?-test {:a 1} true?))
   ;;
   ;; string
   (testing "string, empty"
-    (perform-not-empty?-test "" true?))
+    (perform-not-empty?-test "" false?))
   (testing "string, not empty"
-    (perform-not-empty?-test "test" false?)))
+    (perform-not-empty?-test "test" true?)))
 
 
 (defn perform-contains-value-test
-  [col search fn-expected]
-  (let [v (kf-collection/contains-value? col search)]
+  [coll search fn-expected]
+  (let [v (kf-collection/contains-value? coll search)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -103,73 +103,113 @@
     (perform-contains-value-test {:a 1 :b 2} 3 false?)))
 
 
-(defn perform-find-duplicates-test
-  [col expected]
-  (let [v (kf-collection/find-duplicates col)]
+(defn perform-not-contains-value-test
+  [coll search fn-expected]
+  (let [v (kf-collection/not-contains-value? coll search)]
+    (is (boolean? v))
+    (is (fn-expected v))))
+
+
+(deftest contains-value-test
+  ;;
+  ;; vector
+  (testing "vector: contains"
+    (perform-not-contains-value-test [1 2 3] 2 false?))
+  (testing "vector: does not contain"
+    (perform-not-contains-value-test [1 2 3] 0 true?))
+  (testing "vector: empty"
+    (perform-not-contains-value-test [] 2 true?))
+  ;;
+  ;; list
+  (testing "list: contains"
+    (perform-not-contains-value-test '(1 2 3) 2 false?))
+  (testing "list: does not contain"
+    (perform-not-contains-value-test '(1 2 3) 0 true?))
+  (testing "list: empty"
+    (perform-not-contains-value-test '() 2 true?))
+  ;;
+  ;; set
+  (testing "set: contains"
+    (perform-not-contains-value-test #{1 2 3} 2 false?))
+  (testing "set: does not contain"
+    (perform-not-contains-value-test #{1 2 3} 0 true?))
+  (testing "set: empty"
+    (perform-not-contains-value-test #{} 2 true?))
+  (testing "map: search on key is'false'"
+    (perform-not-contains-value-test {:a 1 :b 2} :a true?))
+  (testing "map: contains value"
+    (perform-not-contains-value-test {:a 1 :b 2} 2 false?))
+  (testing "map: does not contain value"
+    (perform-not-contains-value-test {:a 1 :b 2} 3 true?)))
+
+
+(defn perform-duplicates-test
+  [coll expected]
+  (let [v (kf-collection/duplicates coll)]
     (is (vector? v))
     (is (= (sort v) (sort expected)))))
 
 
-(deftest find-duplicates-test
+(deftest duplicates-test
   ;;
   ;; vector
   (testing "vector, no duplicates, empty vector"
-    (perform-find-duplicates-test [] []))
+    (perform-duplicates-test [] []))
   (testing "vector, no duplicates, integer: populated vector"
-    (perform-find-duplicates-test [1 2 3 10 4] []))
+    (perform-duplicates-test [1 2 3 10 4] []))
   (testing "vector, no duplicates, string: populated vector"
-    (perform-find-duplicates-test ["alpha" "charlie" "bravo" "foxtrot" "kilo"] []))
+    (perform-duplicates-test ["alpha" "charlie" "bravo" "foxtrot" "kilo"] []))
   (testing "vector, one duplicate, integer"
-    (perform-find-duplicates-test [1 2 3 10 3] [3]))
+    (perform-duplicates-test [1 2 3 10 3] [3]))
   (testing "vector, one duplicate, string"
-    (perform-find-duplicates-test ["alpha" "charlie" "bravo" "alpha" "kilo"] ["alpha"]))
+    (perform-duplicates-test ["alpha" "charlie" "bravo" "alpha" "kilo"] ["alpha"]))
   (testing "vector, three duplicates, integer"
-    (perform-find-duplicates-test [1 2 3 10 3 1 8 2] [3 1 2]))
+    (perform-duplicates-test [1 2 3 10 3 1 8 2] [3 1 2]))
   (testing "vector, three duplicates, string"
-    (perform-find-duplicates-test ["alpha" "charlie" "bravo" "alpha" "kilo" "charlie" "bravo"] ["alpha" "charlie" "bravo"]))
+    (perform-duplicates-test ["alpha" "charlie" "bravo" "alpha" "kilo" "charlie" "bravo"] ["alpha" "charlie" "bravo"]))
   ;;
   ;; list
   (testing "list, no duplicates, empty vector"
-    (perform-find-duplicates-test '() []))
+    (perform-duplicates-test '() []))
   (testing "list, no duplicates, integer: populated list"
-    (perform-find-duplicates-test '(1 2 3 10 4) []))
+    (perform-duplicates-test '(1 2 3 10 4) []))
   (testing "list, no duplicates, string: populated list"
-    (perform-find-duplicates-test '("alpha" "charlie" "bravo" "foxtrot" "kilo") []))
+    (perform-duplicates-test '("alpha" "charlie" "bravo" "foxtrot" "kilo") []))
   (testing "list, one duplicate, integer"
-    (perform-find-duplicates-test '(1 2 3 10 3) [3]))
+    (perform-duplicates-test '(1 2 3 10 3) [3]))
   (testing "list, one duplicate, string"
-    (perform-find-duplicates-test '("alpha" "charlie" "bravo" "alpha" "kilo") ["alpha"]))
+    (perform-duplicates-test '("alpha" "charlie" "bravo" "alpha" "kilo") ["alpha"]))
   (testing "list, three duplicates, integer"
-    (perform-find-duplicates-test [1 2 3 10 3 1 8 2] [3 1 2]))
+    (perform-duplicates-test [1 2 3 10 3 1 8 2] [3 1 2]))
   (testing "list, three duplicates, string"
-    (perform-find-duplicates-test '("alpha" "charlie" "bravo" "alpha" "kilo" "charlie" "bravo") ["alpha" "charlie" "bravo"]))
+    (perform-duplicates-test '("alpha" "charlie" "bravo" "alpha" "kilo" "charlie" "bravo") ["alpha" "charlie" "bravo"]))
   ;;
   ;; set - won't have duplicates, but the function still works
   (testing "set, no duplicates, empty vector"
-    (perform-find-duplicates-test #{} []))
+    (perform-duplicates-test #{} []))
   (testing "set, no duplicates, integer: populated vector"
-    (perform-find-duplicates-test #{1 2 3 10 4} []))
+    (perform-duplicates-test #{1 2 3 10 4} []))
   ;;
   ;; map
   (testing "map, no duplicates, empty vector"
-    (perform-find-duplicates-test {} []))
+    (perform-duplicates-test {} []))
   (testing "map, no duplicates, integer: populated map"
-    (perform-find-duplicates-test {:a 1, :b 2, :c 3, :d 4} []))
+    (perform-duplicates-test {:a 1, :b 2, :c 3, :d 4} []))
   (testing "map, no duplicates, string: populated vector"
-    (perform-find-duplicates-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "kilo"} []))
+    (perform-duplicates-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "kilo"} []))
   (testing "map, one duplicate, integer"
-    (perform-find-duplicates-test {:a 3, :b 2, :c 3, :d 4} [3]))
+    (perform-duplicates-test {:a 3, :b 2, :c 3, :d 4} [3]))
   (testing "map, one duplicate, string"
-    (perform-find-duplicates-test {:a "alpha", :b "charlie", :c "bravo", :d "alpha", :e "kilo"} ["alpha"]))
+    (perform-duplicates-test {:a "alpha", :b "charlie", :c "bravo", :d "alpha", :e "kilo"} ["alpha"]))
   (testing "map, three duplicates, integer"
-    (perform-find-duplicates-test {:a 1, :b 2, :c 3, :d 1, :e 2, :f 3, :g 0} [3 1 2]))
+    (perform-duplicates-test {:a 1, :b 2, :c 3, :d 1, :e 2, :f 3, :g 0} [3 1 2]))
   (testing "map, three duplicates, string"
-    (perform-find-duplicates-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "alpha", :f "bravo", :g "golf", :h "charlie"} ["alpha" "charlie" "bravo"])))
+    (perform-duplicates-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "alpha", :f "bravo", :g "golf", :h "charlie"} ["alpha" "charlie" "bravo"])))
 
 
 (defn perform-duplicates?-test
-  [col fn-expected]
-  (let [v (kf-collection/duplicates? col)]
+  [coll fn-expected]
+  (let [v (kf-collection/duplicates? coll)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -229,6 +269,70 @@
     (perform-duplicates?-test {:a 1, :b 2, :c 3, :d 1, :e 2, :f 3, :g 0} true?))
   (testing "map, three duplicates, string"
     (perform-duplicates?-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "alpha", :f "bravo", :g "golf", :h "charlie"} true?)))
+
+
+(defn perform-not-duplicates?-test
+  [coll fn-expected]
+  (let [v (kf-collection/not-duplicates? coll)]
+    (is (boolean? v))
+    (is (fn-expected v))))
+
+
+(deftest not-duplicates?-test
+  ;;
+  ;; vector
+  (testing "vector, no duplicates: empty vector"
+    (perform-not-duplicates?-test [] true?))
+  (testing "vector, no duplicates, integer: populated vector"
+    (perform-not-duplicates?-test [1 2 3 10 4] true?))
+  (testing "vector, no duplicates, string: populated vector"
+    (perform-not-duplicates?-test ["alpha" "charlie" "bravo" "foxtrot" "kilo"] true?))
+  (testing "vector, one duplicate, integer"
+    (perform-not-duplicates?-test [1 2 3 10 3] false?))
+  (testing "vector, one duplicate, string"
+    (perform-not-duplicates?-test ["alpha" "charlie" "bravo" "alpha" "kilo"] false?))
+  (testing "vector, three duplicates, integer"
+    (perform-not-duplicates?-test [1 2 3 10 3 1 8 2] false?))
+  (testing "vector, three duplicates, string"
+    (perform-not-duplicates?-test ["alpha" "charlie" "bravo" "alpha" "kilo" "charlie" "bravo"] false?))
+  ;;
+  ;; list
+  (testing "list, no duplicates, empty vector"
+    (perform-not-duplicates?-test '() true?))
+  (testing "list, no duplicates, integer: populated list"
+    (perform-not-duplicates?-test '(1 2 3 10 4) true?))
+  (testing "list, no duplicates, string: populated list"
+    (perform-not-duplicates?-test '("alpha" "charlie" "bravo" "foxtrot" "kilo") true?))
+  (testing "list, one duplicate, integer"
+    (perform-not-duplicates?-test '(1 2 3 10 3) false?))
+  (testing "list, one duplicate, string"
+    (perform-not-duplicates?-test '("alpha" "charlie" "bravo" "alpha" "kilo") false?))
+  (testing "list, three duplicates, integer"
+    (perform-not-duplicates?-test [1 2 3 10 3 1 8 2] false?))
+  (testing "list, three duplicates, string"
+    (perform-not-duplicates?-test '("alpha" "charlie" "bravo" "alpha" "kilo" "charlie" "bravo") false?))
+  ;;
+  ;; set - won't have duplicates, but the function still works
+  (testing "set, no duplicates, empty vector"
+    (perform-not-duplicates?-test #{} true?))
+  (testing "set, no duplicates, integer: populated vector"
+    (perform-not-duplicates?-test #{1 2 3 10 4} true?))
+  ;;
+  ;; map
+  (testing "map, no duplicates, empty vector"
+    (perform-not-duplicates?-test {} true?))
+  (testing "map, no duplicates, integer: populated map"
+    (perform-not-duplicates?-test {:a 1, :b 2, :c 3, :d 4} true?))
+  (testing "map, no duplicates, string: populated vector"
+    (perform-not-duplicates?-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "kilo"} true?))
+  (testing "map, one duplicate, integer"
+    (perform-not-duplicates?-test {:a 3, :b 2, :c 3, :d 4} false?))
+  (testing "map, one duplicate, string"
+    (perform-not-duplicates?-test {:a "alpha", :b "charlie", :c "bravo", :d "alpha", :e "kilo"} false?))
+  (testing "map, three duplicates, integer"
+    (perform-not-duplicates?-test {:a 1, :b 2, :c 3, :d 1, :e 2, :f 3, :g 0} false?))
+  (testing "map, three duplicates, string"
+    (perform-not-duplicates?-test {:a "alpha", :b "charlie", :c "bravo", :d "foxtrot", :e "alpha", :f "bravo", :g "golf", :h "charlie"} false?)))
 
 
 (defn perform-assoc-in-m-ks-test
