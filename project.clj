@@ -17,7 +17,7 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections
 
 
-(defproject com.kineticfire/collections "2.0.0"
+(defproject com.kineticfire/collections "2.1.0-SNAPSHOT"
   :description "Clojure/ClojureScript utilities for collections"
   :url "https://github.com/kineticfire-labs/clojure-collections"
   :license {:name "Apache License, Version 2.0"
