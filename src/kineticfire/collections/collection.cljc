@@ -107,10 +107,8 @@
   ([m ks v]
    (clojure.core/assoc-in m ks v))
   ([m ks-v-seq]
-   (reduce (fn [acc single-ks-v]
-             (let [ks (first single-ks-v)
-                   v (last single-ks-v)]
-               (clojure.core/assoc-in acc ks v)))
+   (reduce (fn [acc [ks v] ]
+             (clojure.core/assoc-in acc ks v))
            m
            ks-v-seq)))
 
