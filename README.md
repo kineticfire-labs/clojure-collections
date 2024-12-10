@@ -20,7 +20,7 @@ simplifying common, multistep operations on collections and (2) increasing code 
 which software can be understood and modified) for those operations.
 
 A trite example: `(seq x)` is the [recommended idiom for testing that a sequence is not empty](https://clojuredocs.org/clojure.core/empty_q).
-However, `(not-empty? x)` seems much more readable.  While senior Clojurians readily recognize `(seq x)` as asking 
+However, `(not-empty? x)` is more readable.  While senior Clojurians readily recognize `(seq x)` as asking 
 if `x` is not empty, junior developers may not; in practice, most development teams do not consist of all senior-level 
 Clojure experts.  Even for senior Clojurians, `(not-empty? x)` reduces the cognitive load when quickly scanning through 
 code or after long hours of pouring through many lines of code. 
