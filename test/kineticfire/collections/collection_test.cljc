@@ -19,13 +19,13 @@
 
 (ns kineticfire.collections.collection-test
   (:require [clojure.test                       :refer :all]
-            [kineticfire.collections.collection :as kf-collection]))
+            [kineticfire.collections.collection :as kf-coll]))
 
 
 
 (defn perform-not-empty?-test
   [coll fn-expected]
-  (let [v (kf-collection/not-empty? coll)]
+  (let [v (kf-coll/not-empty? coll)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -63,9 +63,157 @@
     (perform-not-empty?-test "test" true?)))
 
 
+(defn perform-contains?-test
+  [coll key-or-seq fn-expected]
+  (let [v (kf-coll/contains? coll key-or-seq)]
+    (is (boolean? v))
+    (is (fn-expected v))))
+
+
+(deftest contains?-test
+  ;;
+  ;; map
+  (testing "map: key not coll, first level, found"
+    (perform-contains?-test {:a {:b 1}} :a true?))
+  (testing "map: key not coll, first level, not found"
+    (perform-contains?-test {:a {:b 1}} :b false?))
+  (testing "map: key coll, first level, found"
+    (perform-contains?-test {:a {:b 1}} [:a] true?))
+  (testing "map: key coll, first level, not found"
+    (perform-contains?-test {:a {:b 1}} [:c] false?))
+  (testing "map: key coll, second level, found"
+    (perform-contains?-test {:a {:b 1}} [:a :b] true?))
+  (testing "map: key coll, second level, not found"
+    (perform-contains?-test {:a {:b 1}} [:a :c] false?))
+  (testing "map: key coll, third level, found"
+    (perform-contains?-test {:a {:b {:c 1}}} [:a :b :c] true?))
+  (testing "map: key coll, third level, not found"
+    (perform-contains?-test {:a {:b {:c 1}}} [:a :b :d] false?))
+  ;;
+  ;; vector
+  (testing "vector: key not coll, first level, found"
+    (perform-contains?-test ["a" "b" "c"] 0 true?))
+  (testing "vector: key not coll, first level, not found"
+    (perform-contains?-test ["a" "b" "c"] 3 false?))
+  (testing "vector: key coll, first level, found"
+    (perform-contains?-test ["a" "b" "c"] [0] true?))
+  (testing "vector: key coll, first level, not found"
+    (perform-contains?-test ["a" "b" "c"] [3] false?))
+  (testing "vector: key not coll, first level, found"
+    (perform-contains?-test [["a" "b"] ["c" "d"]] 0 true?))
+  (testing "vector: key not coll, first level, not found"
+    (perform-contains?-test [["a" "b"] ["c" "d"]] 2 false?))
+  (testing "vector: key coll, first level, found"
+    (perform-contains?-test [["a" "b"] ["c" "d"]] [0] true?))
+  (testing "vector: key coll, first level, not found"
+    (perform-contains?-test [["a" "b"] ["c" "d"]] [2] false?))
+  (testing "vector: key coll, second level, found"
+    (perform-contains?-test [["a" "b"] ["c" "d"]] [0 0] true?))
+  (testing "vector: key coll, second level, not found"
+    (perform-contains?-test [["a" "b"] ["c" "d"]] [0 2] false?))
+  ;;
+  ;; set
+  (testing "set: key not coll, first level, found"
+    (perform-contains?-test #{"a" "b" "c"} "a" true?))
+  (testing "set: key not coll, first level, not found"
+    (perform-contains?-test #{"a" "b" "c"} "d" false?))
+  (testing "set: key coll, first level, found"
+    (perform-contains?-test #{"a" "b" "c"} ["a"] true?))
+  (testing "set: key coll, first level, not found"
+    (perform-contains?-test #{"a" "b" "c"} ["d"] false?))
+  ;
+  ; string
+  (testing "string: key not coll, first level, found"
+    (perform-contains?-test "hello" 0 true?))
+  (testing "string: key not coll, first level, not found"
+    (perform-contains?-test "hello" 5 false?))
+  ;;
+  ;; mix
+  (testing "mix: found first item available of each collection"
+    (perform-contains?-test {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 0] true?))
+  (testing "mix: found last item available of each collection"
+    (perform-contains?-test {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 4] true?))
+  (testing "mix: not found, last item available of each collection"
+    (perform-contains?-test {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 5] false?)))
+
+
+(defn perform-not-contains?-test
+  [coll key-or-seq fn-expected]
+  (let [v (kf-coll/not-contains? coll key-or-seq)]
+    (is (boolean? v))
+    (is (fn-expected v))))
+
+
+(deftest not-contains?-test
+  ;;
+  ;; map
+  (testing "map: key not coll, first level, found"
+    (perform-not-contains?-test {:a {:b 1}} :a false?))
+  (testing "map: key not coll, first level, not found"
+    (perform-not-contains?-test {:a {:b 1}} :b true?))
+  (testing "map: key coll, first level, found"
+    (perform-not-contains?-test {:a {:b 1}} [:a] false?))
+  (testing "map: key coll, first level, not found"
+    (perform-not-contains?-test {:a {:b 1}} [:c] true?))
+  (testing "map: key coll, second level, found"
+    (perform-not-contains?-test {:a {:b 1}} [:a :b] false?))
+  (testing "map: key coll, second level, not found"
+    (perform-not-contains?-test {:a {:b 1}} [:a :c] true?))
+  (testing "map: key coll, third level, found"
+    (perform-not-contains?-test {:a {:b {:c 1}}} [:a :b :c] false?))
+  (testing "map: key coll, third level, not found"
+    (perform-not-contains?-test {:a {:b {:c 1}}} [:a :b :d] true?))
+  ;;
+  ;; vector
+  (testing "vector: key not coll, first level, found"
+    (perform-not-contains?-test ["a" "b" "c"] 0 false?))
+  (testing "vector: key not coll, first level, not found"
+    (perform-not-contains?-test ["a" "b" "c"] 3 true?))
+  (testing "vector: key coll, first level, found"
+    (perform-not-contains?-test ["a" "b" "c"] [0] false?))
+  (testing "vector: key coll, first level, not found"
+    (perform-not-contains?-test ["a" "b" "c"] [3] true?))
+  (testing "vector: key not coll, first level, found"
+    (perform-not-contains?-test [["a" "b"] ["c" "d"]] 0 false?))
+  (testing "vector: key not coll, first level, not found"
+    (perform-not-contains?-test [["a" "b"] ["c" "d"]] 2 true?))
+  (testing "vector: key coll, first level, found"
+    (perform-not-contains?-test [["a" "b"] ["c" "d"]] [0] false?))
+  (testing "vector: key coll, first level, not found"
+    (perform-not-contains?-test [["a" "b"] ["c" "d"]] [2] true?))
+  (testing "vector: key coll, second level, found"
+    (perform-not-contains?-test [["a" "b"] ["c" "d"]] [0 0] false?))
+  (testing "vector: key coll, second level, not found"
+    (perform-not-contains?-test [["a" "b"] ["c" "d"]] [0 2] true?))
+  ;;
+  ;; set
+  (testing "set: key not coll, first level, found"
+    (perform-not-contains?-test #{"a" "b" "c"} "a" false?))
+  (testing "set: key not coll, first level, not found"
+    (perform-not-contains?-test #{"a" "b" "c"} "d" true?))
+  (testing "set: key coll, first level, found"
+    (perform-not-contains?-test #{"a" "b" "c"} ["a"] false?))
+  (testing "set: key coll, first level, not found"
+    (perform-not-contains?-test #{"a" "b" "c"} ["d"] true?))
+  ;
+  ; string
+  (testing "string: key not coll, first level, found"
+    (perform-not-contains?-test "hello" 0 false?))
+  (testing "string: key not coll, first level, not found"
+    (perform-not-contains?-test "hello" 5 true?))
+  ;;
+  ;; mix
+  (testing "mix: found first item available of each collection"
+    (perform-not-contains?-test {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 0] false?))
+  (testing "mix: found last item available of each collection"
+    (perform-not-contains?-test {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 4] false?))
+  (testing "mix: not found, last item available of each collection"
+    (perform-not-contains?-test {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 5] true?)))
+
+
 (defn perform-contains-value-test
   [coll search fn-expected]
-  (let [v (kf-collection/contains-value? coll search)]
+  (let [v (kf-coll/contains-value? coll search)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -105,7 +253,7 @@
 
 (defn perform-not-contains-value-test
   [coll search fn-expected]
-  (let [v (kf-collection/not-contains-value? coll search)]
+  (let [v (kf-coll/not-contains-value? coll search)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -145,7 +293,7 @@
 
 (defn perform-duplicates-test
   [coll expected]
-  (let [v (kf-collection/duplicates coll)]
+  (let [v (kf-coll/duplicates coll)]
     (is (vector? v))
     (is (= (sort v) (sort expected)))))
 
@@ -209,7 +357,7 @@
 
 (defn perform-duplicates?-test
   [coll fn-expected]
-  (let [v (kf-collection/duplicates? coll)]
+  (let [v (kf-coll/duplicates? coll)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -273,7 +421,7 @@
 
 (defn perform-not-duplicates?-test
   [coll fn-expected]
-  (let [v (kf-collection/not-duplicates? coll)]
+  (let [v (kf-coll/not-duplicates? coll)]
     (is (boolean? v))
     (is (fn-expected v))))
 
@@ -337,14 +485,14 @@
 
 (defn perform-assoc-in-m-ks-test
   [m ks v expected]
-  (let [result (kf-collection/assoc-in m ks v)]
+  (let [result (kf-coll/assoc-in m ks v)]
     (is (map? result))
     (is (= result expected))))
 
 
 (defn perform-assoc-in-m-ks-v-coll-test
   [m ks-v-coll expected]
-  (let [result (kf-collection/assoc-in m ks-v-coll)]
+  (let [result (kf-coll/assoc-in m ks-v-coll)]
     (is (map? result))
     (is (= result expected))))
 
@@ -374,7 +522,7 @@
 
 (defn perform-dissoc-in-test
   [m ks expected]
-  (let [v (kf-collection/dissoc-in m ks)]
+  (let [v (kf-coll/dissoc-in m ks)]
     (is (map? v))
     (is (= v expected))))
 

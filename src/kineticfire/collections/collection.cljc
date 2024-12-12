@@ -29,12 +29,43 @@
   (boolean (seq coll)))
 
 
+(defn contains?
+  "Returns boolean 'true' if the key or key sequence `key-or-seq` is present in the given collection `coll` else returns
+  'false'.  For numerically indexed collections like vectors and Java arrays, this tests if the numeric key is within
+  the range of indexes.  Suitable for maps, vectors, sets, and strings; NOT suitable for lists.  For checking if a
+  *value* is in the collection, see 'kf-collections/contains-value?'.
+
+  When `key-or-seq` is not a collection or if it has size 1, then this function is equivalent to calling
+  '(clojure.core/contains? coll key)'. When `key-or-seq` is a collection of size greater than 1, then this function is
+  equivalent to a combination of 'clojure.core/get-in' followed by 'clojure.core/contains?'."
+  [coll key-or-seq]
+  (if (coll? key-or-seq)
+    (if (= (count key-or-seq) 1)
+      (clojure.core/contains? coll (last key-or-seq))
+      (clojure.core/contains? (get-in coll (butlast key-or-seq)) (last key-or-seq)))
+    (clojure.core/contains? coll key-or-seq)))
+
+
+(defn not-contains?
+  "Returns boolean 'true' if the key or key sequence `key-or-seq` is not present in the given collection `coll` else
+  returns 'false'.  For numerically indexed collections like vectors and Java arrays, this tests if the numeric key is
+  within the range of indexes.  Suitable for maps, vectors, sets, and strings; NOT suitable for lists.  For checking if
+  a *value* is not in the collection, see 'kf-collections/not-contains-value?'.
+
+  When `key-or-seq` is not a collection or if it has size 1, then this function is equivalent to calling
+  '(not (clojure.core/contains? coll key))'. When `key-or-seq` is a collection of size greater than 1, then this
+  function is equivalent to a combination of 'clojure.core/get-in' followed by 'clojure.core/contains?' then
+  'clojure.core/not'."
+  [coll key-or-seq]
+  (not (contains? coll key-or-seq)))
+
+
 (defn contains-value?
   "Returns boolean 'true' if the value `val` is contained in the collection `coll` and 'false' otherwise.  For a map,
   searches values at the current level only.
 
-  Where '(clojure.core/contains? coll key)' checks if the *key* is in the collection, this function tests if a *value* is
-  contained in the collection."
+  Where '(clojure.core/contains? coll key)' checks if the *key* is in the collection, this function tests if a *value*
+  is contained in the collection."
   [coll val]
   (if (map? coll)
     (boolean (some #(= % val) (vals coll)))
