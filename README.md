@@ -60,13 +60,15 @@ implementation("com.kineticfire:collections:2.0.0")
 
 1. [collections.collection](#collectionscollection)
    1. [not-empty?](#not-empty)
-   2. [contains-value?](#contains-value)
-   3. [not-contains-value?](#not-contains-value)
-   3. [duplicates](#duplicates)
-   4. [duplicates?](#duplicates-1)
-   5. [not-duplicates?](#not-duplicates)
-   5. [assoc-in](#assoc-in)
-   6. [dissoc-in](#dissoc-in)
+   2. [contains?](#contains)
+   3. [not-contains?](#not-contains)
+   4. [contains-value?](#contains-value)
+   5. [not-contains-value?](#not-contains-value)
+   6. [duplicates](#duplicates)
+   7. [duplicates?](#duplicates-1)
+   8. [not-duplicates?](#not-duplicates)
+   9. [assoc-in](#assoc-in)
+   10. [dissoc-in](#dissoc-in)
 2. [collections.set](#collectionsset)
    1. [symmetric-difference](#symmetric-difference)
 
@@ -74,13 +76,15 @@ implementation("com.kineticfire:collections:2.0.0")
 ## collections.collection
 
 1. [not-empty?](#not-empty)
-2. [contains-value?](#contains-value)
-3. [not-contains-value?](#not-contains-value)
-3. [duplicates](#duplicates)
-4. [duplicates?](#duplicates-1)
-5. [not-duplicates?](#not-duplicates)
-5. [assoc-in](#assoc-in)
-6. [dissoc-in](#dissoc-in)
+2. [contains?](#contains)
+3. [not-contains?](#not-contains)
+4. [contains-value?](#contains-value)
+5. [not-contains-value?](#not-contains-value)
+6. [duplicates](#duplicates)
+7. [duplicates?](#duplicates-1)
+8. [not-duplicates?](#not-duplicates)
+9. [assoc-in](#assoc-in)
+10. [dissoc-in](#dissoc-in)
 
 
 ### not-empty?
@@ -111,6 +115,122 @@ experience.
 
 (not-empty? "")
 ;;=> false
+```
+
+
+### contains?
+
+```clojure
+(contains? coll key-or-seq)
+```
+
+Returns boolean 'true' if the key or key sequence `key-or-seq` is present in the given collection `coll` else returns
+'false'.  For numerically indexed collections like vectors and Java arrays, this tests if the numeric key is within
+the range of indexes.  Suitable for maps, vectors, sets, and strings; NOT suitable for lists.  For checking if a
+*value* is in the collection, see `kf-collections/contains-value?`.
+
+When `key-or-seq` is not a collection or if it has size 1, then this function is equivalent to calling 
+`(clojure.core/contains? coll key)`. When `key-or-seq` is a collection of size greater than 1, then this function is 
+equivalent to a combination of `clojure.core/get-in` followed by `clojure.core/contains?`.
+
+```clojure
+;; suitable for maps
+(contains? {:a {:b {:c 1}}} [:a :b :c])
+;;=> true
+
+(contains? {:a {:b {:c 1}}} [:a :b :d])
+;;=> false
+
+;; equivalent to (clojure.core/contains? {:a {:b {:c 1}}} :a)
+(contains? {:a {:b {:c 1}}} [:a])
+;;=> true
+
+;; equivalent to (clojure.core/contains? {:a {:b {:c 1}}} :a)
+(contains? {:a {:b {:c 1}}} :a)
+;;=> true
+
+;; suitable for vectors, where the function tests if the numeric key is within the range of indexes
+(contains? ["a" "b" "c"] 0)
+;;=> true
+
+(contains? ["a" "b" "c"] 3)
+;;=> false
+
+;; suitable for sets, where the set members are the keys
+(contains? #{"a" "b" "c"} "a")
+;;=> true
+
+(contains? #{"a" "b" "c"} "d")
+;;=> false
+
+;; suitable for strings, where the function tests if the numeric key is within the range of indexes
+(contains? "hello" 0)
+;;=> true
+
+(contains? "hello" 5)
+;;=> false
+
+;; suitable for multi-level, mixed collection types
+(contains? {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 0])
+;; => true
+```
+
+### not-contains?
+
+```clojure
+(not-contains? coll key-or-seq)
+```
+
+Returns boolean 'true' if the key or key sequence `key-or-seq` is not present in the given collection `coll` else
+returns 'false'.  For numerically indexed collections like vectors and Java arrays, this tests if the numeric key is
+within the range of indexes.  Suitable for maps, vectors, sets, and strings; NOT suitable for lists.  For checking if
+a *value* is not in the collection, see `kf-collections/not-contains-value?`.
+
+When `key-or-seq` is not a collection or if it has size 1, then this function is equivalent to calling
+`(not (clojure.core/contains? coll key))`. When `key-or-seq` is a collection of size greater than 1, then this
+function is equivalent to a combination of `clojure.core/get-in` followed by `clojure.core/contains?` then
+`clojure.core/not`.
+
+```clojure
+;; suitable for maps
+(not-contains? {:a {:b {:c 1}}} [:a :b :c])
+;;=> false
+
+(not-contains? {:a {:b {:c 1}}} [:a :b :d])
+;;=> true
+
+;; equivalent to (not (clojure.core/contains? {:a {:b {:c 1}}} :a))
+(not-contains? {:a {:b {:c 1}}} [:a])
+;;=> false
+
+;; equivalent to (not (clojure.core/contains? {:a {:b {:c 1}}} :a))
+(not-contains? {:a {:b {:c 1}}} :a)
+;;=> false
+
+;; suitable for vectors, where the function tests if the numeric key is within the range of indexes
+(not-contains? ["a" "b" "c"] 0)
+;;=> false
+
+(not-contains? ["a" "b" "c"] 3)
+;;=> true
+
+;; suitable for sets, where the set members are the keys
+(not-contains? #{"a" "b" "c"} "a")
+;;=> false
+
+(not-contains? #{"a" "b" "c"} "d")
+;;=> true
+
+;; suitable for strings, where the function tests if the numeric key is within the range of indexes
+(not-contains? "hello" 0)
+;;=> false
+
+(not-contains? "hello" 5)
+;;=> true
+
+;; suitable for multi-level, mixed collection types
+(not-contains? {:a {:b [1 #{"alpha" "bravo"}]}} [:a :b 1 "alpha" 0])
+;; => false
 ```
 
 ### contains-value?
