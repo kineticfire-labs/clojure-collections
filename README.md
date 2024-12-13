@@ -127,7 +127,7 @@ experience.
 Returns boolean 'true' if the key or key sequence `key-or-seq` is present in the given collection `coll` else returns
 'false'.  For numerically indexed collections like vectors and Java arrays, this tests if the numeric key is within
 the range of indexes.  Suitable for maps, vectors, sets, and strings; NOT suitable for lists.  For checking if a
-*value* is in the collection, see `kf-collections/contains-value?`.
+*value* is in the collection, see `kineticfire.collections.collection/contains-value?`.
 
 When `key-or-seq` is not a collection or if it has size 1, then this function is equivalent to calling 
 `(clojure.core/contains? coll key)`. When `key-or-seq` is a collection of size greater than 1, then this function is 
@@ -184,7 +184,7 @@ equivalent to a combination of `clojure.core/get-in` followed by `clojure.core/c
 Returns boolean 'true' if the key or key sequence `key-or-seq` is not present in the given collection `coll` else
 returns 'false'.  For numerically indexed collections like vectors and Java arrays, this tests if the numeric key is
 within the range of indexes.  Suitable for maps, vectors, sets, and strings; NOT suitable for lists.  For checking if
-a *value* is not in the collection, see `kf-collections/not-contains-value?`.
+a *value* is not in the collection, see `kineticfire.collections.collection/not-contains-value?`.
 
 When `key-or-seq` is not a collection or if it has size 1, then this function is equivalent to calling
 `(not (clojure.core/contains? coll key))`. When `key-or-seq` is a collection of size greater than 1, then this
