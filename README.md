@@ -31,19 +31,19 @@ code or after long hours of pouring through many lines of code.
 ## Leiningen/Boot
 
 ```
-[com.kineticfire/collections "2.0.0"]
+[com.kineticfire/collections "2.1.0"]
 ```
 
 ## Clojure CLI/deps.edn
 
 ```
-com.kineticfire/collections {:mvn/version "2.0.0"}
+com.kineticfire/collections {:mvn/version "2.1.0"}
 ```
 
 ## Gradle
 
 ```
-implementation("com.kineticfire:collections:2.0.0")
+implementation("com.kineticfire:collections:2.1.0")
 ```
 
 ## Maven
@@ -52,7 +52,7 @@ implementation("com.kineticfire:collections:2.0.0")
 <dependency>
   <groupId>com.kineticfire</groupId>
   <artifactId>collections</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
