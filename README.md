@@ -4,20 +4,22 @@
 [![Clojars Project](https://img.shields.io/clojars/v/com.kineticfire/collections.svg)](https://clojars.org/com.kineticfire/collections)
 <p></p>
 
-Clojure/ClojureScript utilities for collections
+Utilities for collections suitable for [Clojure](https://clojure.org/), [ClojureScript](https://clojurescript.org/), and
+[Babashka](https://babashka.org/).
 
 # Contents
 1. [Motivation](#motivation)
 2. [Installation](#installation)
 3. [Usage](#usage)
-4. [License](#license)
+4. [Documentation](#documentation)
+5. [License](#license)
 
 
 # Motivation
 
-This library provides functions for operating on collections.  The library focuses at the intersection of (1) 
-simplifying common, multistep operations on collections and (2) increasing code maintainability (e.g., the ease with 
-which software can be understood and modified) for those operations.
+The *clojure-collections* library provides functions for operating on collections.  The library focuses at the 
+intersection of (1) simplifying common, multistep operations on collections and (2) increasing code maintainability 
+(e.g., the ease with which software can be understood and modified) for those operations.
 
 A trite example: `(seq x)` is the [recommended idiom for testing that a sequence is not empty](https://clojuredocs.org/clojure.core/empty_q).
 However, `(not-empty? x)` is more readable.  While senior Clojurians readily recognize `(seq x)` as asking 
@@ -27,6 +29,9 @@ code or after long hours of pouring through many lines of code.
 
 
 # Installation
+
+The *clojure-collections* library can be installed from [Clojars](https://clojars.org/com.kineticfire/collections) using
+one of the following methods:
 
 ## Leiningen/Boot
 
@@ -58,6 +63,18 @@ implementation("com.kineticfire:collections:2.1.0")
 
 # Usage
 
+Require the namespace in the `project.clj`, `bb.edn`, or similar file:
+```clojure
+(ns the-project.core
+  (:require [kineticfire.collections.collection :as kf-coll]))
+```
+
+Call a function from the *clojure-collections* library:
+```clojure
+(kf-coll/not-empty? x)
+```
+
+# Documentation
 1. [collections.collection](#collectionscollection)
    1. [not-empty?](#not-empty)
    2. [contains?](#contains)
