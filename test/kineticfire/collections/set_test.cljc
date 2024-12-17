@@ -13,8 +13,8 @@
 ;; limitations under the License.
 
 
-;; KineticFire Labs: https://labs.kineticfire.com
-;;	   project site: https://github.com/kineticfire-labs/clojure-collections
+;; KineticFire Labs: https://labs.kineticfire.com/
+;;	   project site: https://github.com/kineticfire-labs/clojure-collections/
 
 
 (ns kineticfire.collections.set-test

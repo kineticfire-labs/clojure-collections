@@ -13,13 +13,13 @@
 ;; limitations under the License.
 
 
-;; KineticFire Labs: https://labs.kineticfire.com
-;;	   project site: https://github.com/kineticfire-labs/clojure-collections
+;; KineticFire Labs: https://labs.kineticfire.com/
+;;	   project site: https://github.com/kineticfire-labs/clojure-collections/
 
 
 (defproject com.kineticfire/collections "2.2.0-SNAPSHOT"
-  :description "Clojure/ClojureScript utilities for collections"
-  :url "https://github.com/kineticfire-labs/clojure-collections"
+  :description "Clojure/ClojureScript/Babashka utilities for collections"
+  :url "https://github.com/kineticfire-labs/clojure-collections/"
   :license {:name "Apache License, Version 2.0"
             :url "https://www.apache.org/licenses/LICENSE-2.0"}
   :dependencies [[org.clojure/clojure "1.12.0"]

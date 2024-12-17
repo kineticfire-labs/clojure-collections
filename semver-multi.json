@@ -18,7 +18,7 @@
    "release-branches": ["main"],
    "project": {
       "name": "clojure-collections",
-      "description": "Project for collection-related utilities in Clojure/ClojureScript",
+      "description": "Project for collection-related utilities in Clojure, ClojureScript, and Babashka",
       "includes": [
          "readme"
       ],
