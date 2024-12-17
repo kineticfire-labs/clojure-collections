@@ -15,6 +15,10 @@
 # limitations under the License.
 
 
+# KineticFire Labs: https://labs.kineticfire.com/
+#	   project site: https://github.com/kineticfire-labs/clojure-collections/
+
+
 # Usage:
 #   - Set 'year' to current year
 #   - cd into the directory containing 'copyright-year-updater.sh'
