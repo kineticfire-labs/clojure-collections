@@ -66,12 +66,12 @@ implementation("com.kineticfire:collections:2.1.0")
 Require the namespace in the `project.clj`, `bb.edn`, or similar file:
 ```clojure
 (ns the-project.core
-  (:require [kineticfire.collections.collection :as kf-coll]))
+  (:require [kineticfire.collections.collection :as coll]))
 ```
 
 Call a function from the *clojure-collections* library:
 ```clojure
-(kf-coll/not-empty? x)
+(coll/not-empty? x)
 ```
 
 # Documentation
