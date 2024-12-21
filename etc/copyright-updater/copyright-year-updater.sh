@@ -16,7 +16,7 @@
 
 
 # KineticFire Labs: https://labs.kineticfire.com/
-#	   project site:  https://github.com/kineticfire-labs/clojure-collections/
+#	   project site: https://github.com/kineticfire-labs/clojure-collections/
 
 
 # Usage:
