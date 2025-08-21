@@ -36,19 +36,19 @@ one of the following methods:
 ## Leiningen/Boot
 
 ```
-[com.kineticfire/collections "2.1.0"]
+[com.kineticfire/collections "2.1.1"]
 ```
 
 ## Clojure CLI/deps.edn
 
 ```
-com.kineticfire/collections {:mvn/version "2.1.0"}
+com.kineticfire/collections {:mvn/version "2.1.1"}
 ```
 
 ## Gradle
 
 ```
-implementation("com.kineticfire:collections:2.1.0")
+implementation("com.kineticfire:collections:2.1.1")
 ```
 
 ## Maven
@@ -57,7 +57,7 @@ implementation("com.kineticfire:collections:2.1.0")
 <dependency>
   <groupId>com.kineticfire</groupId>
   <artifactId>collections</artifactId>
-  <version>2.1.0</version>
+  <version>2.1.1</version>
 </dependency>
 ```
 

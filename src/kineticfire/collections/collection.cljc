@@ -18,6 +18,8 @@
 
 
 (ns kineticfire.collections.collection
+  (:refer-clojure :exclude [contains? assoc-in])
+  (:require [clojure.core :as core])
   (:gen-class))
 
 
@@ -41,9 +43,9 @@
   [coll key-or-seq]
   (if (coll? key-or-seq)
     (if (= (count key-or-seq) 1)
-      (clojure.core/contains? coll (last key-or-seq))
-      (clojure.core/contains? (get-in coll (butlast key-or-seq)) (last key-or-seq)))
-    (clojure.core/contains? coll key-or-seq)))
+      (core/contains? coll (last key-or-seq))
+      (core/contains? (get-in coll (butlast key-or-seq)) (last key-or-seq)))
+    (core/contains? coll key-or-seq)))
 
 
 (defn not-contains?
@@ -136,10 +138,10 @@
   '(assoc-in m ks-v-seq)' is equivalent calling '(clojure.core/assoc-in m ks v)' with a reduce function to accumulate
   the results of associating multiple key sequence / value pairs."
   ([m ks v]
-   (clojure.core/assoc-in m ks v))
+   (core/assoc-in m ks v))
   ([m ks-v-seq]
    (reduce (fn [acc [ks v] ]
-             (clojure.core/assoc-in acc ks v))
+             (core/assoc-in acc ks v))
            m
            ks-v-seq)))
 

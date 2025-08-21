@@ -17,7 +17,7 @@
 ;;	   project site: https://github.com/kineticfire-labs/clojure-collections/
 
 
-(defproject com.kineticfire/collections "2.2.0-SNAPSHOT"
+(defproject com.kineticfire/collections "2.1.1"
   :description "Clojure/ClojureScript/Babashka utilities for collections"
   :url "https://github.com/kineticfire-labs/clojure-collections/"
   :license {:name "Apache License, Version 2.0"
